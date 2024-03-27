@@ -10,4 +10,6 @@ public class Article {
 
     private Long id;
 
+    private String text;
+
 }
