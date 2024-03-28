@@ -26,32 +26,17 @@ public class ApiV1ArticleController {
     }
 
     @GetMapping("/{id}")
-    public Article getArticle(@PathVariable(value = "id") Long id) {
-
-        return this.articleService.findById(id);
+    public RsData<Article> getArticle(@PathVariable(value = "id") Long id) {
+        return articleService.findById(id)
+                .map(article -> RsData.of(
+                "S-1",
+                "성공",
+                article
+                )).orElseGet(() -> RsData.of(
+                "F-1",
+                "%d번 게시글은 존재하지 않습니다.".formatted(id)
+                ));
     }
 
-    @PostMapping("/{id}")
-    public List<Article> createArticle(@PathVariable(value = "id") Long id) {
-
-
-        return this.articleService.findAll();
-    }
-
-    @PatchMapping("/{id}")
-    public Article patchArticle(@PathVariable(value = "id") Long id) {
-        return null;
-    }
-
-    @PutMapping("/{id}")
-    public Article putArticle(@PathVariable(value = "id") Long id) {
-        return null;
-    }
-
-    @DeleteMapping("/{id}")
-    public List<Article> deleteArticle(@PathVariable(value = "id") Long id) {
-
-        return this.articleService.findAll();
-    }
 
 }

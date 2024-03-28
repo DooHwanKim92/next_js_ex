@@ -23,6 +23,7 @@ public class RsData<T> {
     }
 
     @JsonIgnore
+    // 이 메서드에서 반환하는 값은 Json 객체로 넘기지 않는다.
     public boolean isSuccess() {
         return resultCode.startsWith("S-");
     }
