@@ -2,6 +2,7 @@ package com.rest.proj.domain.article.controller;
 
 
 import com.rest.proj.domain.article.entity.Article;
+import com.rest.proj.domain.article.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,70 +16,41 @@ import java.util.List;
 @RequestMapping("/api/v1/articles")
 public class ApiV1ArticleController {
 
-    List<Article> articles = new ArrayList<>();
-
-    public void initList() {
-        for (int i = 1; i <= 100; i++) {
-            articles.add(new Article((long) i, "test" + i));
-        }
-    }
+    private final ArticleService articleService;
 
     @GetMapping("")
     public List<Article> getArticles() {
 
-        initList();
-
-        return articles;
+        return this.articleService.findAll();
     }
 
     @GetMapping("/{id}")
     public Article getArticle(@PathVariable(value = "id") Long id) {
 
-        for (int i = 0; i < this.articles.size(); i++) {
-            if (articles.get(i).getId() == id) {
-                return articles.get(i);
-            }
-        }
-
-        return null;
+        return this.articleService.findById(id);
     }
 
     @PostMapping("/{id}")
     public List<Article> createArticle(@PathVariable(value = "id") Long id) {
 
-        for (int i = 0; i < this.articles.size(); i++) {
-            if (!this.articles.get(i).getId().equals(id)) {
-                Article article = new Article(id, "test" + id);
-                this.articles.add(article);
-                return this.articles;
-            }
-        }
 
-        return this.articles;
+        return this.articleService.findAll();
     }
 
     @PatchMapping("/{id}")
     public Article patchArticle(@PathVariable(value = "id") Long id) {
-        Article article = new Article(id, "test1");
-        return article;
+        return null;
     }
 
     @PutMapping("/{id}")
     public Article putArticle(@PathVariable(value = "id") Long id) {
-        Article article = new Article(id, "test1");
-        return article;
+        return null;
     }
 
     @DeleteMapping("/{id}")
     public List<Article> deleteArticle(@PathVariable(value = "id") Long id) {
 
-        for (int i = 0; i < this.articles.size(); i++) {
-            if (this.articles.get(i).getId().equals(id)) {
-                this.articles.remove(articles.get(i));
-            }
-        }
-
-        return this.articles;
+        return this.articleService.findAll();
     }
 
 }
