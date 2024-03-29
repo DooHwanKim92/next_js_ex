@@ -44,12 +44,12 @@ public class ApiV1ArticleController {
     public RsData<ArticleResponse> getArticle(@PathVariable(value = "id") Long id) {
         return articleService.findById(id)
                 .map(article -> RsData.of(
-                "S-1",
-                "성공",
-                new ArticleResponse(article)
+                                "S-1",
+                                "성공",
+                                new ArticleResponse(article)
                 )).orElseGet(() -> RsData.of(
-                "F-1",
-                "%d번 게시글은 존재하지 않습니다.".formatted(id)
+                                "F-1",
+                                "%d번 게시글은 존재하지 않습니다.".formatted(id)
                 ));
     }
 
