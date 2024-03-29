@@ -1,18 +1,27 @@
-import Link from "next/link";
+'use client'
 
-export default function Article() {
+import { useEffect, useState } from "react";
+
+export default function Article () {
+    const [articles, setArticles] = useState([])
+    useEffect(() => {
+        getData()
+    }, [])
+
+
+    const getData = async() => {
+        const result = await fetch("http://localhost:8090/api/v1/articles").then(row => row.json());
+        setArticles(result.data.articles)
+        console.log(result.data.articles)
+    }
+
     return (
-
-        <h1>
-            Article Page
-            <div>
-                <Link href="/article/post">POST</Link>
-            </div>
-            <div>
-                <Link href="/article/me">ME</Link>
-            </div>
+        <>
+        <ul>
+            {articles.map(article => <li>{article.id} {article.title} {article.content}</li>)}
+        </ul>
             
-        </h1>
-
-    );
+        </>
+        
+    )
 }
