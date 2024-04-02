@@ -21,7 +21,6 @@ public class ApiV1ArticleController {
 
     private final ArticleService articleService;
 
-
     @Getter
     @AllArgsConstructor
     public static class ArticlesResponse {
@@ -53,5 +52,27 @@ public class ApiV1ArticleController {
                 ));
     }
 
+    @Getter
+    public static class CreateRequest {
+        private String title;
+        private String content;
+    }
 
+    @PostMapping("")
+    public void createArticle(@RequestBody CreateRequest createRequest) {
+
+        this.articleService.create(createRequest.getTitle(), createRequest.getContent());
+
+    }
+
+//    @PostMapping("")
+//    public RsData<ArticleResponse> createArticle(@RequestBody Article article) {
+//        return this.articleService.create(article)
+//                .map(article -> RsData.of(
+//                        "S-1",
+//                        "성공",
+//                        new ArticleResponse(article)
+//                )).orElseGet()
+//
+//    }
 }
