@@ -23,12 +23,14 @@ public class ArticleService {
         return this.articleRepository.findById(id);
     }
 
-    public void create(String title, String content) {
+    public Article create(String title, String content) {
         Article article = Article.builder()
                 .title(title)
                 .content(content)
                 .build();
 
         this.articleRepository.save(article);
+
+        return article;
     }
 }

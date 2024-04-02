@@ -4,6 +4,8 @@ package com.rest.proj.domain.article.controller;
 import com.rest.proj.domain.article.entity.Article;
 import com.rest.proj.domain.article.service.ArticleService;
 import com.rest.proj.global.RsData.RsData;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -54,15 +56,28 @@ public class ApiV1ArticleController {
 
     @Getter
     public static class CreateRequest {
+        @NotBlank
         private String title;
+        @NotBlank
         private String content;
     }
 
+    @AllArgsConstructor
+    @Getter
+    public static class CreateResponse {
+        private final Article article;
+    }
+
     @PostMapping("")
-    public void createArticle(@RequestBody CreateRequest createRequest) {
+    public RsData<CreateResponse> createArticle(@Valid @RequestBody CreateRequest createRequest) {
 
-        this.articleService.create(createRequest.getTitle(), createRequest.getContent());
+        Article article = this.articleService.create(createRequest.getTitle(), createRequest.getContent());
 
+        return RsData.of(
+                "S-1",
+                "게시글 등록 성공",
+                new CreateResponse(article)
+        );
     }
 
 //    @PostMapping("")
