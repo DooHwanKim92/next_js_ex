@@ -80,14 +80,4 @@ public class ApiV1ArticleController {
         );
     }
 
-//    @PostMapping("")
-//    public RsData<ArticleResponse> createArticle(@RequestBody Article article) {
-//        return this.articleService.create(article)
-//                .map(article -> RsData.of(
-//                        "S-1",
-//                        "성공",
-//                        new ArticleResponse(article)
-//                )).orElseGet()
-//
-//    }
 }
