@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class ApiV1ArticleController {
         );
     }
 
-    @Getter
+    @Data
     public static class ModifyRequest {
         @NotBlank
         private String title;
@@ -99,7 +100,7 @@ public class ApiV1ArticleController {
         private final Article article;
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public RsData<ModifyResponse> modifyArticle(@PathVariable(value = "id") Long id, @Valid @RequestBody ModifyRequest modifyRequest) {
         Optional<Article> article = this.articleService.findById(id);
         if(article.isEmpty()) {
@@ -109,17 +110,22 @@ public class ApiV1ArticleController {
             );
         }
 
+        // 게시글 수정 권한 검증 로직 필요
+
         this.articleService.modify(article.get(), modifyRequest.getTitle(), modifyRequest.getContent());
 
         return RsData.of(
                 "S-1",
-                "게시글 수정 성공",
+                "%d 번 게시글 수정 성공".formatted(article.get().getId()),
                 new ModifyResponse(article.get())
         );
     }
 
     @DeleteMapping("/{id}")
     public RsData<Object> removeArticle(@PathVariable(value = "id") Long id) {
+
+        // 게시글 삭제 권한 검증 로직 필요
+
         Optional<Article> article = this.articleService.findById(id);
         if(article.isEmpty()) {
             return RsData.of(

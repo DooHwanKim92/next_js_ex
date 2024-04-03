@@ -42,6 +42,7 @@ public class ArticleService {
         );
     }
 
+    @Transactional
     public void modify(Article article, String title, String content) {
         Article modifyArticle = article.toBuilder()
                 .title(title)
@@ -51,6 +52,7 @@ public class ArticleService {
         this.articleRepository.save(modifyArticle);
     }
 
+    @Transactional
     public void remove(Article article) {
         this.articleRepository.delete(article);
     }
