@@ -33,4 +33,17 @@ public class ArticleService {
 
         return article;
     }
+
+    public void modify(Article article, String title, String content) {
+        Article modifyArticle = article.toBuilder()
+                .title(title)
+                .content(content)
+                .build();
+
+        this.articleRepository.save(modifyArticle);
+    }
+
+    public void remove(Article article) {
+        this.articleRepository.delete(article);
+    }
 }

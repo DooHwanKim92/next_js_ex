@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 // 콘트롤러 메서드에서 return하는 값을 기본적으로 문자열로 반환함
@@ -55,6 +56,7 @@ public class ApiV1ArticleController {
     }
 
     @Getter
+    // 매핑된 메서드에서 @RequestBody로 받은 Json객체를 담는 객체
     public static class CreateRequest {
         @NotBlank
         private String title;
@@ -62,21 +64,72 @@ public class ApiV1ArticleController {
         private String content;
     }
 
-    @AllArgsConstructor
     @Getter
+    @AllArgsConstructor
     public static class CreateResponse {
         private final Article article;
     }
 
     @PostMapping("")
     public RsData<CreateResponse> createArticle(@Valid @RequestBody CreateRequest createRequest) {
-
+        // @RequestBody
         Article article = this.articleService.create(createRequest.getTitle(), createRequest.getContent());
 
         return RsData.of(
                 "S-1",
                 "게시글 등록 성공",
                 new CreateResponse(article)
+        );
+    }
+
+    @Getter
+    public static class ModifyRequest {
+        @NotBlank
+        private String title;
+        @NotBlank
+        private String content;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class ModifyResponse {
+        private final Article article;
+    }
+
+    @PutMapping("/{id}")
+    public RsData<ModifyResponse> modifyArticle(@PathVariable(value = "id") Long id, @Valid @RequestBody ModifyRequest modifyRequest) {
+        Optional<Article> article = this.articleService.findById(id);
+        if(article.isEmpty()) {
+            return RsData.of(
+                    "F-1",
+                    "%d번 게시글은 존재하지 않습니다.".formatted(id)
+            );
+        }
+
+        this.articleService.modify(article.get(), modifyRequest.getTitle(), modifyRequest.getContent());
+
+        return RsData.of(
+                "S-1",
+                "게시글 수정 성공",
+                new ModifyResponse(article.get())
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public RsData<Object> removeArticle(@PathVariable(value = "id") Long id) {
+        Optional<Article> article = this.articleService.findById(id);
+        if(article.isEmpty()) {
+            return RsData.of(
+                    "F-1",
+                    "%d번 게시글은 존재하지 않습니다.".formatted(id)
+            );
+        }
+
+        this.articleService.remove(article.get());
+
+        return RsData.of(
+                "S-1",
+                "게시글 삭제 성공"
         );
     }
 
