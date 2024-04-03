@@ -10,10 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,19 +39,19 @@ public class ApiV1ArticleController {
     @GetMapping("")
     public RsData<ArticlesResponse> getArticles() {
         List<Article> articles = this.articleService.findAll();
-        return RsData.of("S-1","성공", new ArticlesResponse(articles));
+        return RsData.of("S-1", "성공", new ArticlesResponse(articles));
     }
 
     @GetMapping("/{id}")
     public RsData<ArticleResponse> getArticle(@PathVariable(value = "id") Long id) {
         return articleService.findById(id)
                 .map(article -> RsData.of(
-                                "S-1",
-                                "성공",
-                                new ArticleResponse(article)
+                        "S-1",
+                        "성공",
+                        new ArticleResponse(article)
                 )).orElseGet(() -> RsData.of(
-                                "F-1",
-                                "%d번 게시글은 존재하지 않습니다.".formatted(id)
+                        "F-1",
+                        "%d번 게시글은 존재하지 않습니다.".formatted(id)
                 ));
     }
 
@@ -62,6 +60,7 @@ public class ApiV1ArticleController {
     // 매핑된 메서드에서 @RequestBody로 받은 Json객체를 담는 객체
     public static class CreateRequest {
         @NotBlank
+        // @Valid
         private String title;
         @NotBlank
         private String content;
@@ -69,6 +68,8 @@ public class ApiV1ArticleController {
 
     @Getter
     @AllArgsConstructor
+    // 백엔드 로직 처리 후 결과를 담아서 보여준다.
+    // db에 접근하지는 않음
     public static class CreateResponse {
         private final Article article;
     }
@@ -77,7 +78,7 @@ public class ApiV1ArticleController {
     public RsData<CreateResponse> createArticle(@Valid @RequestBody CreateRequest createRequest) {
         RsData<Article> createRs = this.articleService.create(createRequest.getTitle(), createRequest.getContent());
 
-        if(createRs.isFail()) return (RsData) createRs;
+        if (createRs.isFail()) return (RsData) createRs;
 
         return RsData.of(
                 createRs.getResultCode(),
@@ -102,15 +103,16 @@ public class ApiV1ArticleController {
 
     @PatchMapping("/{id}")
     public RsData<ModifyResponse> modifyArticle(@PathVariable(value = "id") Long id, @Valid @RequestBody ModifyRequest modifyRequest) {
+
+        // 게시글 수정 권한 검증 로직 필요
+
         Optional<Article> article = this.articleService.findById(id);
-        if(article.isEmpty()) {
+        if (article.isEmpty()) {
             return RsData.of(
                     "F-1",
                     "%d번 게시글은 존재하지 않습니다.".formatted(id)
             );
         }
-
-        // 게시글 수정 권한 검증 로직 필요
 
         this.articleService.modify(article.get(), modifyRequest.getTitle(), modifyRequest.getContent());
 
@@ -127,7 +129,7 @@ public class ApiV1ArticleController {
         // 게시글 삭제 권한 검증 로직 필요
 
         Optional<Article> article = this.articleService.findById(id);
-        if(article.isEmpty()) {
+        if (article.isEmpty()) {
             return RsData.of(
                     "F-1",
                     "%d번 게시글은 존재하지 않습니다.".formatted(id)
@@ -137,8 +139,9 @@ public class ApiV1ArticleController {
         this.articleService.remove(article.get());
 
         return RsData.of(
-                "S-1",
-                "게시글 삭제 성공"
+                "S-5",
+                "게시글 삭제 성공",
+                article
         );
     }
 

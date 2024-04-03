@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class RsData<T> {
+    // Rs = Result
     private String resultCode;
     private String msg;
     private T data;

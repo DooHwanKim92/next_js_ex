@@ -55,5 +55,6 @@ public class ArticleService {
     @Transactional
     public void remove(Article article) {
         this.articleRepository.delete(article);
+        // JPA 메서드 articleRepository.deleteById(id); 도 있음
     }
 }
