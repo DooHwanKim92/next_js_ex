@@ -3,8 +3,10 @@ package com.rest.proj.domain.article.service;
 
 import com.rest.proj.domain.article.entity.Article;
 import com.rest.proj.domain.article.repository.ArticleRepository;
+import com.rest.proj.global.RsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +25,9 @@ public class ArticleService {
         return this.articleRepository.findById(id);
     }
 
-    public Article create(String title, String content) {
+    @Transactional
+    // 예외 발생 시 rollback 해준다
+    public RsData<Article> create(String title, String content) {
         Article article = Article.builder()
                 .title(title)
                 .content(content)
@@ -31,7 +35,11 @@ public class ArticleService {
 
         this.articleRepository.save(article);
 
-        return article;
+        return RsData.of(
+                "S-3",
+                "게시글 등록 성공",
+                article
+        );
     }
 
     public void modify(Article article, String title, String content) {

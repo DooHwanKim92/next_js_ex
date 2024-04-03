@@ -7,6 +7,7 @@ import com.rest.proj.global.RsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +56,8 @@ public class ApiV1ArticleController {
                 ));
     }
 
-    @Getter
+    @Data
+    // @Data = getter, setter 등 자주 사용하는 어노테이션 패키징
     // 매핑된 메서드에서 @RequestBody로 받은 Json객체를 담는 객체
     public static class CreateRequest {
         @NotBlank
@@ -72,13 +74,14 @@ public class ApiV1ArticleController {
 
     @PostMapping("")
     public RsData<CreateResponse> createArticle(@Valid @RequestBody CreateRequest createRequest) {
-        // @RequestBody
-        Article article = this.articleService.create(createRequest.getTitle(), createRequest.getContent());
+        RsData<Article> createRs = this.articleService.create(createRequest.getTitle(), createRequest.getContent());
+
+        if(createRs.isFail()) return (RsData) createRs;
 
         return RsData.of(
-                "S-1",
-                "게시글 등록 성공",
-                new CreateResponse(article)
+                createRs.getResultCode(),
+                createRs.getMsg(),
+                new CreateResponse(createRs.getData())
         );
     }
 
