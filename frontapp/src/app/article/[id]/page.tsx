@@ -1,11 +1,14 @@
 'use client'
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import Article from "../page";
+
 
 export default function ArticleDetail() {
     
     const params = useParams();
+    // @PathVariable 같은 놈임
+
+    const router = useRouter();
 
     const [clicked, setClicked] = useState(true)
 
@@ -15,6 +18,8 @@ export default function ArticleDetail() {
         fetch(`http://localhost:8090/api/v1/articles/${params.id}`)
                                 .then(row => row.json())
                                 .then(row => setArticle(row.data.article))
+        // 해당 URL로 응답받은 data를 json객체에 담는다. (백엔드 통신)
+        // json객체에 담은 data를 다시 article에 set 한다.
     }
 
     // 게시글 삭제
@@ -26,13 +31,12 @@ export default function ArticleDetail() {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(article)
+            }
         });
 
         if (response.ok) {
             alert('게시물 삭제 완료.');
-            window.location.assign('http://localhost:3000/article');
+            router.push("/article")
         } else {
             alert('게시물 삭제 실패.');
         }
