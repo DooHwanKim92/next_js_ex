@@ -5,7 +5,7 @@ export default function ArticleDetailLayout({
   }>) {
     return (
         <div>
-            <h1>Article Detail Layout</h1>
+            Article Detail Layout
             {children}
         </div>
     );
