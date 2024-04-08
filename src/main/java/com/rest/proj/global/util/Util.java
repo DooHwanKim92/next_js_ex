@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class Util {
     public static class json {
-
         public static Object toStr(Map<String, Object> map) {
             try {
                 return new ObjectMapper().writeValueAsString(map);

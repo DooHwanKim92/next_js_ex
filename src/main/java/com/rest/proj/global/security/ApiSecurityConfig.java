@@ -32,18 +32,23 @@ public class ApiSecurityConfig {
                 )
                 .cors(
                         cors -> cors.disable()
+                        // cors 설정, 타 도메인에서 api 호출 가능
                 )
                 .csrf(
                         csrf -> csrf.disable()
+                        // csrf 토큰 끄기
                 )
                 .httpBasic(
                         httpBasic -> httpBasic.disable()
+                        // httpBasic 로그인 방식 끄기
                 )
                 .formLogin(
                         formLogin -> formLogin.disable()
+                        // 폼 로그인 방식 끄기
                 )
                 .sessionManagement(
                         sessionManagement -> sessionManagement.sessionCreationPolicy(STATELESS)
+                        // 세션 끄기
                 )
                 .addFilterBefore(
                         jwtAuthorizationFilter, //엑세스 토큰을 이용한 로그인 처리
