@@ -3,6 +3,7 @@ package com.rest.proj.domain.member.controller;
 import com.rest.proj.domain.member.dto.MemberDto;
 import com.rest.proj.domain.member.service.MemberService;
 import com.rest.proj.global.RsData.RsData;
+import com.rest.proj.global.rq.Rq;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ApiV1MemberController {
     private final MemberService memberService;
+    private final Rq rq;
 
     @Getter
     public static class LoginRequestBody {
@@ -35,6 +37,8 @@ public class ApiV1MemberController {
 
         RsData<MemberService.AuthAndMakeTokensResponseBody> authAndMakeTokensRs = memberService.authAndMakeTokens(loginRequestBody.getUsername(), loginRequestBody.getPassword());
 
+        // 토큰 쿠키에 등록
+        rq.setCrossDomainCookie("accessToken", authAndMakeTokensRs.getData().getAccessToken());
 
         return RsData.of(
                 authAndMakeTokensRs.getResultCode(),
