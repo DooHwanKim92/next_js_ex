@@ -38,4 +38,3 @@ out/
 
 ### secret.yml 파일 ###
 application-secret.yml
-application-secret.yml.default
