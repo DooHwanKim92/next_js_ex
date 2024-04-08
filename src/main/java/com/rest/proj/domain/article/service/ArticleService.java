@@ -3,6 +3,7 @@ package com.rest.proj.domain.article.service;
 
 import com.rest.proj.domain.article.entity.Article;
 import com.rest.proj.domain.article.repository.ArticleRepository;
+import com.rest.proj.domain.member.entity.Member;
 import com.rest.proj.global.RsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,9 @@ public class ArticleService {
 
     @Transactional
     // 예외 발생 시 rollback 해준다
-    public RsData<Article> create(String title, String content) {
+    public RsData<Article> create(Member member, String title, String content) {
         Article article = Article.builder()
+                .author(member)
                 .title(title)
                 .content(content)
                 .build();

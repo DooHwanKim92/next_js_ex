@@ -76,7 +76,7 @@ public class ApiV1ArticleController {
 
     @PostMapping("")
     public RsData<CreateResponse> createArticle(@Valid @RequestBody CreateRequest createRequest) {
-        RsData<Article> createRs = this.articleService.create(createRequest.getTitle(), createRequest.getContent());
+        RsData<Article> createRs = this.articleService.create(null, createRequest.getTitle(), createRequest.getContent());
 
         if (createRs.isFail()) return (RsData) createRs;
 
