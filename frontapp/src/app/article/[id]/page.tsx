@@ -22,6 +22,15 @@ export default function ArticleDetail() {
         // json객체에 담은 data를 다시 article에 set 한다.
     }
 
+    useEffect(() => {
+        fetch(`http://localhost:8090/api/v1/articles/${params.id}`,{
+            method: 'GET',
+            credentials: 'include', // 핵심 변경점
+        })
+        .then(result => result.json())
+        .then(result => setArticle(result.data.article))
+    }, [])
+
     // 게시글 삭제
     const deleteArticle = async (e) => {
         e.preventDefault();

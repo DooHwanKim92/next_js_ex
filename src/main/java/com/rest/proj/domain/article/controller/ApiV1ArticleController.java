@@ -3,6 +3,7 @@ package com.rest.proj.domain.article.controller;
 
 import com.rest.proj.domain.article.entity.Article;
 import com.rest.proj.domain.article.service.ArticleService;
+import com.rest.proj.domain.member.service.MemberService;
 import com.rest.proj.global.RsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +24,8 @@ import java.util.Optional;
 public class ApiV1ArticleController {
 
     private final ArticleService articleService;
+
+    private final MemberService memberService;
 
     @Getter
     @AllArgsConstructor

@@ -5,16 +5,16 @@ import com.rest.proj.domain.member.repository.MemberRepository;
 import com.rest.proj.global.RsData.RsData;
 import com.rest.proj.global.exceptions.GlobalException;
 import com.rest.proj.global.jwt.JwtProvider;
+import com.rest.proj.global.security.SecurityUser;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +69,20 @@ public class MemberService {
         // 토큰 출력
         // System.out.println("accessToken :" + accessToken);
         return RsData.of("200-1", "로그인 성공", new AuthAndMakeTokensResponseBody(member, accessToken));
+    }
+
+    public SecurityUser getUserFromAccessToken(String accessToken) {
+        Map<String, Object> payloadBody = jwtProvider.getClaims(accessToken);
+
+        long id = (int) payloadBody.get("id");
+        String username = (String) payloadBody.get("username");
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        return new SecurityUser(
+                id,
+                username,
+                "",
+                authorities
+        );
     }
 }
