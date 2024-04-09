@@ -40,6 +40,7 @@ public class ApiV1MemberController {
 
         // 토큰 쿠키에 등록
         rq.setCrossDomainCookie("accessToken", authAndMakeTokensRs.getData().getAccessToken());
+        rq.setCrossDomainCookie("refreshToken", authAndMakeTokensRs.getData().getRefreshToken());
 
         return RsData.of(
                 authAndMakeTokensRs.getResultCode(),

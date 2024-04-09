@@ -2,6 +2,7 @@ package com.rest.proj.global.security.filter;
 
 import com.rest.proj.domain.member.entity.Member;
 import com.rest.proj.domain.member.service.MemberService;
+import com.rest.proj.global.RsData.RsData;
 import com.rest.proj.global.jwt.JwtProvider;
 import com.rest.proj.global.rq.Rq;
 import com.rest.proj.global.security.SecurityUser;
@@ -82,10 +83,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String accessToken = rq.getCookieValue("accessToken", "");
 
         if (!accessToken.isBlank()) {
-            rq.setCrossDomainCookie("accessToken", accessToken);
+            if (!memberService.validateToken(accessToken)) {
+                String refreshToken = rq.getCookieValue("refreshToken", "");
+
+                RsData<String> rs = memberService.refreshAccessToken(refreshToken);
+                accessToken = rs.getData();
+                rq.setCrossDomainCookie("accessToken", accessToken);
+            }
             SecurityUser securityUser = memberService.getUserFromAccessToken(accessToken);
             rq.setLogin(securityUser);
         }
+
         filterChain.doFilter(request, response);
     }
 }

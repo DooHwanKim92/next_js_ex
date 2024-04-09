@@ -33,6 +33,9 @@ public class MemberService {
                 .email(email)
                 .build();
 
+        String refreshToken = jwtProvider.genRefreshToken(member);
+        member.setRefreshToken(refreshToken);
+
         memberRepository.save(member);
 
         return member;
@@ -47,6 +50,7 @@ public class MemberService {
     public static class AuthAndMakeTokensResponseBody {
         private Member member;
         private String accessToken;
+        private String refreshToken;
     }
 
     @Transactional
@@ -58,17 +62,16 @@ public class MemberService {
         if (!passwordEncoder.matches(password, member.getPassword())) {
             throw  new GlobalException("400-2", "비밀번호가 일치 하지 않습니다.");
         }
-        Map<String, Object> claims = new HashMap<>();
 
-        claims.put("id", member.getId());
-        claims.put("username", member.getUsername());
+        //리프레시토큰 가지고오기
+        String refreshToken = member.getRefreshToken();
 
         // 회원데이터, 시간 설정 및 토큰 생성
-        String accessToken = jwtProvider.genToken(claims, 60 * 60 * 5);
+        String accessToken = jwtProvider.genToken(member, 60 * 60 * 5);
 
         // 토큰 출력
         // System.out.println("accessToken :" + accessToken);
-        return RsData.of("200-1", "로그인 성공", new AuthAndMakeTokensResponseBody(member, accessToken));
+        return RsData.of("200-1", "로그인 성공", new AuthAndMakeTokensResponseBody(member, accessToken, refreshToken));
     }
 
     public SecurityUser getUserFromAccessToken(String accessToken) {
@@ -84,5 +87,17 @@ public class MemberService {
                 "",
                 authorities
         );
+    }
+
+    public boolean validateToken(String token) {
+        return jwtProvider.verify(token);
+    }
+
+    public RsData<String> refreshAccessToken(String refreshToken) {
+        Member member = memberRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new GlobalException("400-1", "존재하지 않는 리프레시 토큰입니다."));
+
+        String accessToken = jwtProvider.genAccessToken(member);
+
+        return RsData.of("200-1", "토큰 갱신 성공", accessToken);
     }
 }

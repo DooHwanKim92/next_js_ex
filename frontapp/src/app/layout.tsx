@@ -19,10 +19,20 @@ export default function RootLayout({
     <html lang="ko">
       <body className={inter.className}>
         <nav>
-            <Link href="/">Home</Link>
-            <Link href="/article">Article</Link>
-            <Link href="/about">About</Link>
-            <Link href="/login">LogIn</Link>
+          <ul>
+              <li>
+                <Link href="/">홈</Link>
+              </li>
+              <li>
+                <Link href="/about">소개</Link>
+              </li>
+              <li>
+                <Link href="/article">게시판</Link>
+              </li>
+              <li>
+                <Link href="/login">로그인</Link>
+              </li>
+            </ul>
         </nav>
         {children}
       </body>
