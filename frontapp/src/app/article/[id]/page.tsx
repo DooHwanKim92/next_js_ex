@@ -24,8 +24,7 @@ export default function ArticleDetail() {
 
     useEffect(() => {
         fetch(`http://localhost:8090/api/v1/articles/${params.id}`,{
-            method: 'GET',
-            credentials: 'include', // 핵심 변경점
+            method: 'GET'
         })
         .then(result => result.json())
         .then(result => setArticle(result.data.article))

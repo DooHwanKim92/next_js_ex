@@ -27,7 +27,6 @@ export default function LogIn() {
         } else {
             alert('로그인 실패');
         }
-
     }
 
     const handleChange = (e) => {

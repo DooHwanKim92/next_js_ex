@@ -14,10 +14,12 @@ public class MemberDto {
     private String username;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+    private String email;
 
     public MemberDto(Member member) {
         this.id = member.getId();
         this.username = member.getUsername();
+        this.email = member.getEmail();
         this.createdDate = member.getCreateDate();
         this.modifiedDate = member.getModifiedDate();
     }
