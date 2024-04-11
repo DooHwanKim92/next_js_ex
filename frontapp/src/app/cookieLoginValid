@@ -1,0 +1,21 @@
+'use client'
+
+import { useCookies } from "react-cookie";
+import { useEffect, useState } from "react";
+
+
+
+const [cookies] = useCookies();
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+      const accessToken = cookies.get("accessToken");
+
+      if(accessToken) {
+        setIsLoggedIn(true);
+      }
+  },[])
+
+
+  {isLoggedIn ? <Link href="/logout">로그아웃</Link> : <Link href="/login">로그인</Link>}

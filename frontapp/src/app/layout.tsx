@@ -30,7 +30,7 @@ export default function RootLayout({
                 <Link href="/article">게시판</Link>
               </li>
               <li>
-                <Link href="/login">로그인</Link>
+                 <Link href="/login">로그인</Link>
               </li>
             </ul>
         </nav>
